@@ -1,22 +1,34 @@
 import logo from './logo.svg';
 import './App.css';
+import { useTodos } from './hooks/useTodos';
+import { useState } from 'react';
 
 function App() {
+  const [userId, setUserId] = useState(5);
+  const [newTodo, setNewTodo] = useState('');
+  const {todos, todosLoading, create} = useTodos(userId);
+  const createNewTodo = () => {
+    create(newTodo);
+    setNewTodo('');
+  };
+  console.log('app');
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {todosLoading ? 
+      "Loading":
+      <>
+      <div>Todos:</div>  
+      <input value={userId} onChange={event => setUserId(event.target.value)}/>
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id}>{todo.todo}</li>
+          ))}
+      </ul>
+      </>
+      }
+      <input value={newTodo} onChange={event => setNewTodo(event.target.value)}/>
+      <button onClick={() => createNewTodo()}>Create Todo</button>
       </header>
     </div>
   );
